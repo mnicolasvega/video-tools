@@ -1,3 +1,4 @@
 torch
 torchvision
 opencv-python
+realesrgan # For CPU usage
