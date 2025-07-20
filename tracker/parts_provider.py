@@ -1,7 +1,7 @@
 import mediapipe as mp
 
 def get_pose_points(
-    draw_face: bool = True,        
+    draw_face: bool = True,
     draw_trunk: bool = True,
     draw_arms: bool = True,
     draw_legs: bool = True,

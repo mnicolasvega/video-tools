@@ -78,5 +78,6 @@ def run(input_path: str):
 
 
 
-image, data = run(PATH_IMAGE_INPUT)
-save_result(PATH_IMAGE_INPUT, image, data)
+if __name__ == "__main__":
+    image, data = run(PATH_IMAGE_INPUT)
+    save_result(PATH_IMAGE_INPUT, image, data)
