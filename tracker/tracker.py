@@ -11,19 +11,29 @@ import os
 CONFIG_DRAW_ALL_LANDMARKS_FOUND = False
 CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND = True
 CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND_NAMES = False
+CONFIG_SAVE_JSON = False
 
 
 
-def save_result(input_path: str, label: str, image: ndarray, data: dict) -> None:
+def save_result(input_path: str, label: str, image: ndarray, data: dict, output_dir: str | None = None) -> None:
+    if len(data) == 0:
+        print(f"no points found for: {input_path}")
+        return
     file_name = Path(input_path)
-    output_file_base = file_name.with_name(f"{file_name.stem}_{label}")
+    output_file_base = f"{output_dir}/{file_name.stem} {label}" \
+        if not output_dir == None else \
+        file_name.with_name(f"{file_name.stem}_{label}")
     output_file_image = f"{output_file_base}{file_name.suffix}"
     output_file_json = f"{output_file_base}.json"
-    cv2.imwrite(output_file_image, image)
+    cv2.imwrite(output_file_image, image)    
+    save_json(output_file_json, data)
 
-    with open(output_file_json, 'w') as f:
+
+def save_json(output_path: str, data: dict) -> None:
+    if not CONFIG_SAVE_JSON:
+        return
+    with open(output_path, 'w') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-
 
 
 def run(input_path: str):
