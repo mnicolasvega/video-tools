@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from numpy import ndarray
 from parts_provider import get_pose_points
 from pathlib import Path
@@ -9,8 +8,6 @@ import os
 
 
 
-load_dotenv()
-PATH_IMAGE_INPUT = os.getenv('PATH_IMAGE_INPUT')
 CONFIG_DRAW_ALL_LANDMARKS_FOUND = False
 CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND = True
 CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND_NAMES = False
@@ -75,9 +72,3 @@ def run(input_path: str):
         if len(ignored_points) > 0:
             print("points not found: " + str(ignored_points))
     return image, data
-
-
-
-if __name__ == "__main__":
-    image, data = run(PATH_IMAGE_INPUT)
-    save_result(PATH_IMAGE_INPUT, image, data)
