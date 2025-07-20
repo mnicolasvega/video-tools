@@ -14,9 +14,9 @@ CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND_NAMES = False
 
 
 
-def save_result(input_path: str, image: ndarray, data: dict) -> None:
+def save_result(input_path: str, label: str, image: ndarray, data: dict) -> None:
     file_name = Path(input_path)
-    output_file_base = file_name.with_name(f"{file_name.stem}_edited")
+    output_file_base = file_name.with_name(f"{file_name.stem}_{label}")
     output_file_image = f"{output_file_base}{file_name.suffix}"
     output_file_json = f"{output_file_base}.json"
     cv2.imwrite(output_file_image, image)

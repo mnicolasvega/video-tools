@@ -9,4 +9,4 @@ PATH_IMAGE_INPUT = os.getenv('PATH_IMAGE_INPUT')
 
 if __name__ == "__main__":
     image, data = run(PATH_IMAGE_INPUT)
-    save_result(PATH_IMAGE_INPUT, image, data)
+    save_result(PATH_IMAGE_INPUT, 'edited', image, data)
