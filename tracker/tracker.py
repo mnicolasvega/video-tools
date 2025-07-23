@@ -1,6 +1,6 @@
 from numpy import ndarray
-from parts_provider import get_pose_points
 from pathlib import Path
+from tracker import parts_provider
 import cv2
 import json
 import mediapipe as mp
@@ -8,8 +8,8 @@ import os
 
 
 
-CONFIG_DRAW_ALL_LANDMARKS_FOUND = False
-CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND = True
+CONFIG_DRAW_ALL_LANDMARKS_FOUND = True
+CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND = False
 CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND_NAMES = False
 CONFIG_SAVE_JSON = False
 
@@ -25,7 +25,7 @@ def save_result(input_path: str, label: str, image: ndarray, data: dict, output_
         file_name.with_name(f"{file_name.stem}_{label}")
     output_file_image = f"{output_file_base}{file_name.suffix}"
     output_file_json = f"{output_file_base}.json"
-    cv2.imwrite(output_file_image, image)    
+    cv2.imwrite(output_file_image, image)
     save_json(output_file_json, data)
 
 
@@ -59,7 +59,7 @@ def run(input_path: str):
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS
             )
-        points = get_pose_points()
+        points = parts_provider.get_pose_points()
         ignored_points = []
 
         for point_name, point in points.items():
