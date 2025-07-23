@@ -40,14 +40,16 @@ def _get_upscaler_model(scale_factor: int) -> RealESRGANer:
     return upscaler
 
 
-def upscale_img(model: RealESRGANer, path_input: str, path_output: str, scale_factor: int) -> ndarray:
+def upscale_img(model: RealESRGANer, path_input: str, scale_factor: int, path_output: str | None) -> ndarray:
     if os.path.exists(path_output):
         return
     img_source = cv2.imread(path_input)
     img_upscaled, _ = model.enhance(img_source, outscale = scale_factor)
+    if (not path_output == None) and os.path.exists(path_output):
+        cv2.imwrite(path_output, img_upscaled)
     return img_upscaled
 
 
 def run(input_path: str, scale: int = DEFAULT_SCALE_FACTOR) -> ndarray:
     model = _get_upscaler_model(scale)
-    return upscale_img(model, input_path, f"{input_path}2 .png", scale)
+    return upscale_img(model, input_path, scale)
