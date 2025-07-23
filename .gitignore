@@ -4,3 +4,6 @@ video-tools-env/
 
 # Compiled Python
 *.pyc
+
+# init files
+__init__.py
