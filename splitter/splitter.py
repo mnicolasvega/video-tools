@@ -4,7 +4,7 @@ import subprocess
 
 
 DEFAULT_IMAGE_EXTENSION = "jpg"
-FRAME_DIGIT_FORMAT_NUMBER = "%06d"
+FRAME_DIGIT_FORMAT_NUMBER = "%05d"
 
 
 def split(
