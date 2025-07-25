@@ -10,7 +10,7 @@ def get_timestamp(seconds: float) -> str:
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     secs = seconds % 60
-    return f"{hours:02}:{minutes:02}:{secs:06.3f}"
+    return f"{hours:02}:{minutes:02}:{secs:06.1f}"
 
 def detect_scenes(video_path: str, threshhold: float = DEFAULT_SCENE_THRESHOLD) -> list:
     video_manager = VideoManager([video_path])
@@ -45,5 +45,3 @@ def get_clips(video_path: str, scenes: list) -> dict:
             .subclipped(start, end)
         clips[timestamp] = clip
     return clips
-
-
