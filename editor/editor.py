@@ -1,5 +1,8 @@
 from moviepy import VideoFileClip
 
+CODEC_VIDEO = "libx264"
+CODEC_AUDIO = "aac"
+
 def get_duration(input_path: str) -> int:
     return VideoFileClip(input_path).duration
 
@@ -28,6 +31,6 @@ def edit(
     video = video.resized(new_size = (output_width, output_height))
 
     if output_path:
-        video.write_videofile(output_path)
+        video.write_videofile(output_path, codec = CODEC_VIDEO, audio_codec = CODEC_AUDIO)
 
     return video
