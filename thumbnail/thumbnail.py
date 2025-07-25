@@ -10,7 +10,7 @@ def get_timestamp(seconds: float) -> str:
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
     secs = seconds % 60
-    return f"{hours:02}:{minutes:02}:{secs:06.1f}"
+    return f"{hours:02}:{minutes:02}:{secs:03.1f}"
 
 def detect_scenes(video_path: str, threshhold: float = DEFAULT_SCENE_THRESHOLD) -> list:
     video_manager = VideoManager([video_path])
@@ -25,14 +25,17 @@ def get_thumbnails(video_path: str, scenes: list) -> dict:
     thumbnails = {}
     for scene in scenes:
         start, end = scene
-        clip = VideoFileClip(video_path).subclipped(start, end)
+        clip = VideoFileClip(video_path)
+        if end > clip.duration:
+            end = clip.duration
+        clip = clip.subclipped(start, end)
 
         duration = end - start
         frame_time = duration / 2
-        frame_s = clip.get_frame(0)
+        #frame_s = clip.get_frame(0)
+        #thumbnails[get_timestamp(start)] = Image.fromarray(np.uint8(frame_s))
         frame_e = clip.get_frame(frame_time)
-        thumbnails[get_timestamp(start)] = Image.fromarray(np.uint8(frame_s))
-        thumbnails[get_timestamp(end)] = Image.fromarray(np.uint8(frame_e))
+        thumbnails[get_timestamp(start + frame_time)] = Image.fromarray(np.uint8(frame_e))
         clip.close()
     return thumbnails
 
