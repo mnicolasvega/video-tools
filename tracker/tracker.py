@@ -1,19 +1,15 @@
 from numpy import ndarray
 from pathlib import Path
-from tracker import parts_provider
+import parts_provider
 import cv2
 import json
 import mediapipe as mp
 import os
 
-
-
 CONFIG_DRAW_ALL_LANDMARKS_FOUND = True
-CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND = False
+CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND = True
 CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND_NAMES = False
 CONFIG_SAVE_JSON = False
-
-
 
 def save_result(input_path: str, label: str, image: ndarray, data: dict, output_dir: str | None = None) -> None:
     if len(data) == 0:
@@ -28,15 +24,13 @@ def save_result(input_path: str, label: str, image: ndarray, data: dict, output_
     cv2.imwrite(output_file_image, image)
     save_json(output_file_json, data)
 
-
 def save_json(output_path: str, data: dict) -> None:
     if not CONFIG_SAVE_JSON:
         return
     with open(output_path, 'w') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-
-def run(input_path: str):
+def run(input_path: str, pose_points: dict = {}):
     if not os.path.isfile(input_path):
         raise FileNotFoundError(f"File not found: '{input_path}'")
 
@@ -59,7 +53,7 @@ def run(input_path: str):
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS
             )
-        points = parts_provider.get_pose_points()
+        points = parts_provider.get_pose_points(**pose_points)
         ignored_points = []
 
         for point_name, point in points.items():
