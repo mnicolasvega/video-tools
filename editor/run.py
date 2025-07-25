@@ -4,7 +4,7 @@ import editor
 import os
 
 load_dotenv()
-PATH_VIDEO_INPUT = os.getenv('PATH_VIDEO_INPUT')
+VIDEO_INPUT = os.getenv('VIDEO_INPUT')
 
 def get_output_path(input: str, label: str) -> str:
     file_path = Path(input)
@@ -13,10 +13,10 @@ def get_output_path(input: str, label: str) -> str:
     return file_path.with_name(f"{file_name} {label}{extension}")
 
 if __name__ == "__main__":
-    output_path = get_output_path(PATH_VIDEO_INPUT, 'edit')
-    duration = editor.get_duration(PATH_VIDEO_INPUT)
+    output_path = get_output_path(VIDEO_INPUT, 'edit')
+    duration = editor.get_duration(VIDEO_INPUT)
     bounds = editor.edit(
-        PATH_VIDEO_INPUT,
+        VIDEO_INPUT,
         output_path,
         second_start = duration - 3 * 60,
         output_width = 640,
