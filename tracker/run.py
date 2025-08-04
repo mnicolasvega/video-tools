@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import cv2
 import json
 import os
 import tracker
@@ -9,5 +10,6 @@ points = os.getenv('POSE_POINTS')
 POSE_POINTS = json.loads(points) if points else {}
 
 if __name__ == "__main__":
-    image, data = tracker.run(PATH_IMAGE_INPUT, POSE_POINTS)
+    image_src = cv2.imread(PATH_IMAGE_INPUT)
+    image, data = tracker.run(image_src, POSE_POINTS)
     tracker.save_result(PATH_IMAGE_INPUT, 'edited', image, data)

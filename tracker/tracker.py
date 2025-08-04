@@ -1,6 +1,6 @@
 from numpy import ndarray
 from pathlib import Path
-import parts_provider
+from tracker import parts_provider
 import cv2
 import json
 import mediapipe as mp
@@ -30,15 +30,11 @@ def save_json(output_path: str, data: dict) -> None:
     with open(output_path, 'w') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-def run(input_path: str, pose_points: dict = {}):
-    if not os.path.isfile(input_path):
-        raise FileNotFoundError(f"File not found: '{input_path}'")
-
+def run(image: ndarray, pose_points: dict = {}) -> list:
     mp_pose = mp.solutions.pose
     pose = mp_pose.Pose(static_image_mode=True)
     mp_drawing = mp.solutions.drawing_utils
 
-    image = cv2.imread(input_path)
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     results = pose.process(image_rgb)
