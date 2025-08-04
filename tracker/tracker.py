@@ -4,7 +4,6 @@ from tracker import parts_provider
 import cv2
 import json
 import mediapipe as mp
-import os
 
 CONFIG_DRAW_ALL_LANDMARKS_FOUND = True
 CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND = True
@@ -30,7 +29,13 @@ def save_json(output_path: str, data: dict) -> None:
     with open(output_path, 'w') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-def run(image: ndarray, pose_points: dict = {}) -> list:
+def run(
+        image: ndarray,
+        pose_points: dict = {},
+        draw_landmarks: bool = CONFIG_DRAW_ALL_LANDMARKS_FOUND,
+        draw_specified_landmarks: bool = CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND,
+        draw_specified_landmark_names: bool = CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND_NAMES
+    ) -> list:
     mp_pose = mp.solutions.pose
     pose = mp_pose.Pose(static_image_mode=True)
     mp_drawing = mp.solutions.drawing_utils
@@ -43,7 +48,7 @@ def run(image: ndarray, pose_points: dict = {}) -> list:
 
     if results.pose_landmarks:
         landmarks = results.pose_landmarks.landmark
-        if CONFIG_DRAW_ALL_LANDMARKS_FOUND:
+        if draw_landmarks:
             mp_drawing.draw_landmarks(
                 image,
                 results.pose_landmarks,
@@ -57,9 +62,9 @@ def run(image: ndarray, pose_points: dict = {}) -> list:
             if landmark.visibility > 0.5:
                 x_px = int(landmark.x * width)
                 y_px = int(landmark.y * height)
-                if CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND:
+                if draw_specified_landmarks:
                     cv2.circle(image, (x_px, y_px), 10, (255, 0, 0), -1)
-                if CONFIG_DRAW_SPECIFIED_LANDMARKS_FOUND_NAMES:
+                if draw_specified_landmark_names:
                     cv2.putText(image, point_name, (x_px + 5, y_px - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
                 data[point_name] = {
                     'x': x_px,
