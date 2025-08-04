@@ -6,15 +6,13 @@ import cv2
 import os
 import torch
 
-
 load_dotenv()
 ESRGAN_MODEL_PATH_X2 = os.getenv('ESRGAN_MODEL_PATH_X2')
 ESRGAN_MODEL_PATH_X4 = os.getenv('ESRGAN_MODEL_PATH_X4')
 DEFAULT_SCALE_FACTOR = 2
 DONT_OVERFLOW_RAM = False
 
-
-def _get_upscaler_model(scale_factor: int) -> RealESRGANer:
+def get_model(scale_factor: int) -> RealESRGANer:
     if scale_factor == 2:
         model_path = ESRGAN_MODEL_PATH_X2
     elif scale_factor == 4:
@@ -39,17 +37,13 @@ def _get_upscaler_model(scale_factor: int) -> RealESRGANer:
     )
     return upscaler
 
-
-def upscale_img(model: RealESRGANer, path_input: str, scale_factor: int, path_output: str | None) -> ndarray:
-    if os.path.exists(path_output):
-        return
-    img_source = cv2.imread(path_input)
+def upscale_img(model: RealESRGANer, img_source: ndarray, scale_factor: int, path_output: str | None = None) -> ndarray:
     img_upscaled, _ = model.enhance(img_source, outscale = scale_factor)
     if (not path_output == None) and os.path.exists(path_output):
         cv2.imwrite(path_output, img_upscaled)
     return img_upscaled
 
-
 def run(input_path: str, scale: int = DEFAULT_SCALE_FACTOR) -> ndarray:
-    model = _get_upscaler_model(scale)
-    return upscale_img(model, input_path, scale)
+    model = get_model(scale)
+    image = cv2.imread(input_path)
+    return upscale_img(model, image, scale)
