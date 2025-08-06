@@ -76,4 +76,10 @@ def run(
 
         if len(ignored_points) > 0:
             print("points not found: " + str(ignored_points))
+
+    pose.close()
+    del landmarks
+    del results
+    del pose
+    del image_rgb
     return image, data
