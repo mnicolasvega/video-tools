@@ -38,3 +38,12 @@ def trim_bounds(bounds: list, image: ndarray) -> list:
     y_min = max(0, y_min)
     y_max = min(img_height, y_max)
     return [x_min, y_min, x_max, y_max]
+
+def get_square_bounds(image: ndarray, bounds: list) -> list:
+    x_min, y_min, x_max, y_max = bounds
+    x_mid = int((x_min + x_max) / 2)
+    y_mid = int((y_min + y_max) / 2)
+    radius = int(max(x_max - x_min, y_max - y_min))
+    square_bounds = [x_mid - radius, y_mid - radius, x_mid + radius, y_mid + radius]
+    square_bounds = trim_bounds(square_bounds, image)
+    return square_bounds
