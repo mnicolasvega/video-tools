@@ -7,9 +7,13 @@ CLASS_PERSON = 0
 REPOSITORY = 'ultralytics/yolov5'
 MODEL = 'yolov5s'
 
-def get_object_bounds(input_path: str, _tag: str = 'person', _class: int = CLASS_PERSON) -> list:
+def get_model():
+    return torch.hub.load(REPOSITORY, MODEL, pretrained = True)
+
+def get_object_bounds(input_path: str, _tag: str = 'person', _class: int = CLASS_PERSON, model = None) -> list:
     img = Image.open(input_path)
-    model = torch.hub.load(REPOSITORY, MODEL, pretrained = True)
+    if model == None:
+        model = get_model()
     results = model(img)
     df_people = results.pandas().xyxy[_class]
     person_boxes = df_people[df_people['name'] == _tag]
@@ -18,6 +22,8 @@ def get_object_bounds(input_path: str, _tag: str = 'person', _class: int = CLASS
         confidence = row['confidence']
         x_min, y_min, x_max, y_max = map(int, [row['xmin'], row['ymin'], row['xmax'], row['ymax']])
         bounds.append([x_min, y_min, x_max, y_max, confidence])
+    img.close()
+    results = None
     return bounds
 
 def get_subimages(img: ndarray, bounds: list) -> list:
@@ -28,8 +34,8 @@ def get_subimages(img: ndarray, bounds: list) -> list:
         subimages.append(img_crop)
     return subimages
 
-def draw_bounds(img: ndarray, bounds: list) -> None:
+def draw_bounds(img: ndarray, bounds: list, color: tuple = (128, 128, 255), thickness: int = 3) -> None:
     for bound in bounds:
         x_min, y_min, x_max, y_max, confidence = bound
         color = (128, 128, 255)
-        cv2.rectangle(img, (x_min, y_min), (x_max, y_max), color, 3)
+        cv2.rectangle(img, (x_min, y_min), (x_max, y_max), color, thickness)
