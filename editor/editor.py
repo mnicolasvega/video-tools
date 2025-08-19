@@ -1,4 +1,4 @@
-from moviepy import VideoFileClip
+from moviepy import VideoFileClip, concatenate_videoclips
 
 CODEC_VIDEO = "libx264"
 CODEC_AUDIO = "aac"
@@ -34,3 +34,11 @@ def edit(
         video.write_videofile(output_path, codec = CODEC_VIDEO, audio_codec = CODEC_AUDIO)
 
     return video
+
+def merge(video_paths: list, output_path: str) -> None:
+    clips = [VideoFileClip(path) for path in video_paths]
+    final_clip = concatenate_videoclips(clips, method="compose")
+    final_clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
+    for clip in clips:
+        clip.close()
+    final_clip.close()
