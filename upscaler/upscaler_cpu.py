@@ -12,7 +12,7 @@ ESRGAN_MODEL_PATH_X4 = os.getenv('ESRGAN_MODEL_PATH_X4')
 DEFAULT_SCALE_FACTOR = 2
 DONT_OVERFLOW_RAM = False
 
-def get_model(scale_factor: int) -> RealESRGANer:
+def get_model(scale_factor: int, watch_ram: bool = DONT_OVERFLOW_RAM) -> RealESRGANer:
     if scale_factor == 2:
         model_path = ESRGAN_MODEL_PATH_X2
     elif scale_factor == 4:
@@ -29,7 +29,7 @@ def get_model(scale_factor: int) -> RealESRGANer:
         scale = scale_factor,
         model_path = model_path,
         model = upscaler_model,
-        tile = 0 if not DONT_OVERFLOW_RAM else 128,
+        tile = 0 if not watch_ram else 128,
         tile_pad = 10,
         pre_pad = 0,
         half = False,
