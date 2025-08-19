@@ -40,7 +40,8 @@ def run(
     pose = mp_pose.Pose(static_image_mode=True)
     mp_drawing = mp.solutions.drawing_utils
 
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image_output = image.copy()
+    image_rgb = cv2.cvtColor(image_output, cv2.COLOR_BGR2RGB)
 
     results = pose.process(image_rgb)
     height, width, _ = image.shape
@@ -50,7 +51,7 @@ def run(
         landmarks = results.pose_landmarks.landmark
         if draw_landmarks:
             mp_drawing.draw_landmarks(
-                image,
+                image_output,
                 results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS
             )
@@ -63,9 +64,9 @@ def run(
                 x_px = int(landmark.x * width)
                 y_px = int(landmark.y * height)
                 if draw_specified_landmarks:
-                    cv2.circle(image, (x_px, y_px), 10, (255, 0, 0), -1)
+                    cv2.circle(image_output, (x_px, y_px), 10, (255, 0, 0), -1)
                 if draw_specified_landmark_names:
-                    cv2.putText(image, point_name, (x_px + 5, y_px - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+                    cv2.putText(image_output, point_name, (x_px + 5, y_px - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
                 data[point_name] = {
                     'x': x_px,
                     'y': y_px,
@@ -82,4 +83,4 @@ def run(
     del results
     del pose
     del image_rgb
-    return image, data
+    return image_output, data
