@@ -17,3 +17,4 @@ def get_output_path(input_path: str) -> str:
 if __name__ == "__main__":
     path_output = get_output_path(PATH_IMAGE_INPUT)
     img_upscaled = upscaler_cpu.run(PATH_IMAGE_INPUT, SCALE_FACTOR)
+    cv2.imwrite(path_output, img_upscaled)
