@@ -1,4 +1,5 @@
 from numpy import ndarray
+import math
 
 def get_outer_bounds(points: dict) -> list:
     x_min = 1000 * 1000
@@ -16,6 +17,30 @@ def get_outer_bounds(points: dict) -> list:
             y_min = y
         if y_max <= y:
             y_max = y
+    return [x_min, y_min, x_max, y_max]
+
+def get_part_bounds(points: dict, names: list) -> list:
+    x_mid = 0
+    y_mid = 0
+    filtered_points = {k: v for k, v in points.items() if k in names}
+    for name, point_data in filtered_points.items():
+        x = point_data['x']
+        y = point_data['y']
+        x_mid += x
+        y_mid += y
+    x_mid = x_mid / len(filtered_points)
+    y_mid = y_mid / len(filtered_points)
+    dist = 0
+    for name, point_data in filtered_points.items():
+        x = point_data['x']
+        y = point_data['y']
+        point_dist = math.sqrt((x_mid - x) ** 2 + (y_mid - y) ** 2)
+        if point_dist > dist:
+            dist = point_dist
+    x_min = int(x_mid - dist)
+    x_max = int(x_mid + dist)
+    y_min = int(y_mid - dist)
+    y_max = int(y_mid + dist)
     return [x_min, y_min, x_max, y_max]
 
 def zoom_bounds(bounds: list, factor: float) -> list:
