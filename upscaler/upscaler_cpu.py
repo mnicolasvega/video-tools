@@ -39,7 +39,7 @@ def get_model(scale_factor: int, watch_ram: bool = DONT_OVERFLOW_RAM) -> RealESR
 
 def upscale_img(model: RealESRGANer, img_source: ndarray, scale_factor: int, path_output: str | None = None) -> ndarray:
     img_upscaled, _ = model.enhance(img_source, outscale = scale_factor)
-    if (not path_output == None) and os.path.exists(path_output):
+    if (not path_output == None) and (not os.path.exists(path_output)):
         cv2.imwrite(path_output, img_upscaled)
     return img_upscaled
 
