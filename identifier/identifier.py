@@ -26,10 +26,15 @@ def get_object_bounds(input_path: str, _tag: str = 'person', _class: int = CLASS
     results = None
     return bounds
 
-def get_subimages(img: ndarray, bounds: list) -> list:
+def get_subimages(img: ndarray, bounds: list, zoom_factor: float = 0.3) -> list:
     subimages = []
     for bound in bounds:
         x_min, y_min, x_max, y_max, confidence = bound
+        img_h, img_w = img.shape[:2]
+        x_min = int(max(0, x_min * (1 - zoom_factor)))
+        x_max = int(min(img_w, x_max * (1 + zoom_factor)))
+        y_min = int(max(0, y_min * (1 - zoom_factor)))
+        y_max = int(min(img_h, y_max * (1 + zoom_factor)))
         img_crop = img[y_min:y_max, x_min:x_max]
         subimages.append(img_crop)
     return subimages
