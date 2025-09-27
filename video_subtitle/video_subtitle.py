@@ -32,11 +32,11 @@ def transcribe_txt(transcription: dict) -> str:
     return subtitles
 
 
-def convert_to_time(segundo: int) -> str:
-    hours = int(segundo // 3600)
-    minutes = int((segundo % 3600) // 60)
-    seconds = int(segundo % 60)
-    milliseconds = int((segundo % 1) * 1000)
+def convert_to_time(total_seconds: int) -> str:
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    milliseconds = int((total_seconds % 1) * 1000)
     return f"{hours:02}:{minutes:02}:{seconds:02},{milliseconds:03}"
 
 
