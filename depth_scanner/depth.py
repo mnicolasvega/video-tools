@@ -1,12 +1,12 @@
-from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from PIL import Image
 
 
 REPOSITORY = "intel-isl/MiDaS"
-MODEL = "MiDaS_small"
+MODEL = "DPT_Large"
 DEFAULT_COLOR_MAP = "inferno"
 
 
@@ -18,7 +18,7 @@ def get_midas():
     midas.to(device)
 
     midas_transforms = torch.hub.load(REPOSITORY, "transforms")
-    transform = midas_transforms.small_transform
+    transform = midas_transforms.dpt_transform
     return midas, device, transform
 
 
@@ -39,5 +39,17 @@ def run(input_path: str) -> np.ndarray:
     with torch.no_grad():
         prediction = midas(input_batch)
     depth_map = prediction.squeeze().cpu().numpy()
+    depth_vis = (depth_map - depth_map.min()) / (depth_map.max() - depth_map.min())
+    return depth_vis
+
+
+def run_with_custom_transform(input_path: str, model, device, transform) -> np.ndarray:
+    """Run depth estimation using custom transform from parse_video_to_vr.py"""
+    img = cv2.imread(input_path)
+    img_input = transform({"image": img})["image"]
+    sample = torch.from_numpy(img_input).unsqueeze(0).to(device)
+    with torch.no_grad():
+        prediction = model.forward(sample)[0]
+        depth_map = prediction.cpu().numpy()
     depth_vis = (depth_map - depth_map.min()) / (depth_map.max() - depth_map.min())
     return depth_vis
